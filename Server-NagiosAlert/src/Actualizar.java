@@ -23,6 +23,18 @@ public class Actualizar extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
+	private class envio{
+		
+		host h;
+		ArrayList<servicio> s;
+		
+		private envio(host h, ArrayList<servicio> s){
+			
+			this.h = h;
+			this.s = s;
+		}
+		
+	}
 	public Actualizar() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -45,23 +57,36 @@ public class Actualizar extends HttpServlet {
 		// Obtenemos la lista de hosts y servicios
 		ArrayList<host> h = parser.parseHosts();
 		ArrayList<servicio> s = parser.parseServicios();
+		
+		
+//TEMPORAL!!!
+		host h1 = new host("Zeus", h.get(0).getStatus(), h.get(0).getRevision(), h.get(0).getDuracion());
+		h.add(h1);
+		
+		servicio s1 = new servicio("Prueba", "Zeus", s.get(0).getStatus(), s.get(0).getRevision(), s.get(0).getDuracion(), "Solo para ver");
+		s.add(s1);
+//FIN TEMPORAL
+		
 		Collections.sort(h, host.hostName);
 		Collections.sort(s, servicio.servicioName);
-
+		//String json = "";
 		// Creamos el hashmap
-		HashMap<host, ArrayList<servicio>> mapa = new HashMap<host, ArrayList<servicio>>();
+		HashMap<String, envio> mapa = new HashMap<String, envio>();
 
 		for (host t1 : h) {
 			ArrayList<servicio> temporal = new ArrayList<servicio>();
 
 			for (servicio t2 : s) {
 
+				//json = new Gson().toJson(t1);
 				if (t1.getNombre().equals(t2.getHost())) {
 					temporal.add(t2);
 				}
 			}
-
-			mapa.put(t1, temporal);
+			
+			envio e = new envio(t1,temporal);
+			
+			mapa.put(t1.getNombre(), e);
 		}
 
 		String json = new Gson().toJson(mapa);
