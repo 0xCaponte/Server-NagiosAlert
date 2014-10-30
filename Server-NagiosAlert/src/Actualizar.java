@@ -14,7 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 /**
- * Servlet implementation class Actualizar
+ * Servlet implementation class Actualizar, se encarga de enviar la informacion del estado de los host
+ * a la aplicacion. 
  */
 @WebServlet("/Actualizar")
 public class Actualizar extends HttpServlet {
@@ -23,6 +24,9 @@ public class Actualizar extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
+	
+	//Clase privada que permite enviar en un mismo objeto tanto un host como todos los serivcios 
+	// asociados a el.
 	private class envio{
 		
 		host h;
@@ -59,17 +63,17 @@ public class Actualizar extends HttpServlet {
 		ArrayList<servicio> s = parser.parseServicios();
 		
 		
-//TEMPORAL!!!
+//TEMPORAL -- SOLO PARA MANDAR MAS DE UN HOST!!!
 		host h1 = new host("Zeus", h.get(0).getStatus(), h.get(0).getRevision(), h.get(0).getDuracion());
 		h.add(h1);
 		
 		servicio s1 = new servicio("Prueba", "Zeus", s.get(0).getStatus(), s.get(0).getRevision(), s.get(0).getDuracion(), "Solo para ver");
 		s.add(s1);
-//FIN TEMPORAL
+//FIN TEMPORAL -------
 		
 		Collections.sort(h, host.hostName);
 		Collections.sort(s, servicio.servicioName);
-		//String json = "";
+	
 		// Creamos el hashmap
 		HashMap<String, envio> mapa = new HashMap<String, envio>();
 
@@ -78,7 +82,6 @@ public class Actualizar extends HttpServlet {
 
 			for (servicio t2 : s) {
 
-				//json = new Gson().toJson(t1);
 				if (t1.getNombre().equals(t2.getHost())) {
 					temporal.add(t2);
 				}
@@ -90,8 +93,13 @@ public class Actualizar extends HttpServlet {
 		}
 
 		String json = new Gson().toJson(mapa);
+		
+		//Aqui lo ciframos
+		// json = LLaves.cifrar(k,json)
+		
+		//Aqui lo mandamos
 		out.print(json);
-
+	
 	}
 
 	/**

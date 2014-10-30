@@ -1,5 +1,19 @@
 import java.util.Comparator;
 
+/**
+ * Fecha: 29/10/14
+ * 
+ * Clase: Host 
+ * 
+ * Clase que implementa el tipo Host, el cual sirve para contener la informacion
+ * de interes de los host que son monitoriados por el servidor Nagios. Asi mismo, 
+ * cuenta con los metodos para acceder a los parametros de interes y para
+ * comparar dos hosts en funcion de su nombre.
+ * 
+ * @author caponte
+ *
+ */
+
 public class host {
 
 	private String nombre;
@@ -10,10 +24,10 @@ public class host {
 	// ------------------ Constructor ------------------
 	public host(String nombre, int status, String revision, String duracion) {
 		super();
-		this.nombre = nombre;
-		this.status = status;
-		this.revision = revision;
-		this.duracion = duracion;
+		this.nombre = nombre;// Nombre del host
+		this.status = status; // Estado del host (0,1,2,3)
+		this.revision = revision; // Ultima fecha de monitoreo
+		this.duracion = duracion; // Tiempo desde la ultima vez que fallo
 	}
 
 	// ------------------ Getters y Setters ------------------

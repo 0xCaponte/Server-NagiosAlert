@@ -1,13 +1,28 @@
 import java.util.Comparator;
 
+
+/**
+ * Fecha: 29/10/14
+ * 
+ * Clase: Servicio
+ * 
+ * Clase que implementa el tipo servicio, el cual sirve para contener la informacion
+ * de interes de los servicios queson monitoriados por el servidor Nagios. Asi mismo, 
+ * cuenta con los metodos para acceder a los parametros de interes y para
+ * comparar dos servicios en funcion del nombre del host al que pertenecen o del nombre
+ * del servicio.
+ * 
+ * @author caponte
+ *
+ */
 public class servicio{
 	
-	private String nombre;
-	private String host;
-	private int status;
-	private String revision;
-	private String duracion;
-	private String info;
+	private String nombre; // Nombre del servicio
+	private String host; // Nombre del host al que pertenece
+	private int status; // Estado del servicio (0,1,2,3)
+	private String revision; // Ultima fecha en que se monitoreo
+	private String duracion; // Tiempo desde la ultima vez que fallo
+	private String info; // Informacion extra sobre el servicio.
 	
 
 //	---------------------   Constructor  ---------------------
@@ -65,7 +80,8 @@ public class servicio{
 	
 	
 	// -------------------- Comparadores -----------------------------
-	//Funcions Comparadora para ordenar servicios por nombre
+	
+	//Funcions Comparadora para ordenar servicios por nombre del servicio
 	public static Comparator<servicio> servicioName = new Comparator<servicio>() {
 		@Override
 		public int compare(servicio s1, servicio s2) {

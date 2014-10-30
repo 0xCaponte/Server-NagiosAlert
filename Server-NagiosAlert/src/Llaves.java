@@ -20,7 +20,8 @@ import com.google.gson.Gson;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 /**
- * Servlet implementation class Llaves
+ * Servlet implementation class Llaves, este servlet permitira el intercambio de las llaves
+ * publicas del cliente y del servidor.
  */
 @WebServlet("/Llaves")
 public class Llaves extends HttpServlet {
@@ -30,7 +31,7 @@ public class Llaves extends HttpServlet {
 
 		String cifrado = "";
 
-		// Encode the original data with RSA private key
+		// cifrar data
 		byte[] bytescifrados = null;
 
 		Cipher c = null;
@@ -68,14 +69,14 @@ public class Llaves extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	
 	// Aqui enviamos nuestra llave publica.
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
 		PrintWriter out = response.getWriter();
 
-		// ------------- Se deberia buscar en un archivo o en su defecto
-		// crearlo----------
+		// ------ Se busca en un archivo o en su defecto se crea----------
 		key kp = new key();
 		String json = "";
 		json = new Gson().toJson(kp.getPublica());

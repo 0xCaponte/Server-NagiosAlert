@@ -5,6 +5,17 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * Fecha: 29/10/14
+ * 
+ * Clase: Parser
+ * 
+ * Clase que cuenta con las funciones necesarias para obtener la informacion del estado 
+ * de los servicios y de los hosts de el archivo "status.dat" de cualquier servidor Nagios.
+ *  
+ * @author caponte
+ *
+ */
 public class parser {
 
 	// Funcion para parsear el archivo status.dat en busca de todos los hosts
@@ -200,25 +211,16 @@ public class parser {
 
 	}
 
-	public static void main(String[] arg) {
-
-		ArrayList<servicio> s = parseServicios();
-
-		Collections.sort(s, servicio.servicioName);
-		   for(servicio temp: s){
-				System.out.println(temp.getNombre());
-				System.out.println(temp.getHost());
-				System.out.println("------------------");
-		   }
-		   
-	}
-	// // funcion para ordenar una lista de servicios basado en el nombre del
-	// host
-	// // al que estan relacionados.
-	// public ArrayList<servicio> sort(ArrayList<servicio> l){
-	//
-	// Collections.sort(l, servicio.servicioName);
-	// return l;
-	//
-	// }
+//	public static void main(String[] arg) {
+//
+//		ArrayList<servicio> s = parseServicios();
+//
+//		Collections.sort(s, servicio.servicioName);
+//		   for(servicio temp: s){
+//				System.out.println(temp.getNombre());
+//				System.out.println(temp.getHost());
+//				System.out.println("------------------");
+//		   }
+//		   
+//	}
 }
