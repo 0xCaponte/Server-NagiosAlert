@@ -77,7 +77,6 @@ public class Llaves extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		// ------ Se busca en un archivo o en su defecto se crea----------
-		key kp = new key();
 		String json = "";
 /*		json = new Gson().toJson(kp.getPublica());
 		
