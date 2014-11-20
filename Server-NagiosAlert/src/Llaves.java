@@ -56,7 +56,7 @@ public class Llaves extends HttpServlet {
 		decifrado = new String(bytesdecifrados);
 	    return decifrado;
 	}
-
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -79,7 +79,7 @@ public class Llaves extends HttpServlet {
 		// ------ Se busca en un archivo o en su defecto se crea----------
 		key kp = new key();
 		String json = "";
-		json = new Gson().toJson(kp.getPublica());
+/*		json = new Gson().toJson(kp.getPublica());
 		
 		try {
 		
@@ -93,7 +93,7 @@ public class Llaves extends HttpServlet {
 				| BadPaddingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 
 		out.print("nada");
 	}

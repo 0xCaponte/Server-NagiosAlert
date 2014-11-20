@@ -16,14 +16,14 @@ import java.util.Scanner;
  * @author caponte
  *
  */
-public class parser {
+public class Parser {
 
 	// Funcion para parsear el archivo status.dat en busca de todos los hosts
 	@SuppressWarnings("deprecation")
-	public static ArrayList<host> parseHosts() {
+	public static ArrayList<Host> parseHosts() {
 
 		String archivo = "/usr/local/nagios/var/status.dat";
-		ArrayList<host> hosts = new ArrayList<host>();
+		ArrayList<Host> hosts = new ArrayList<Host>();
 
 		Scanner scan = null;
 		try {
@@ -95,7 +95,7 @@ public class parser {
 					t = scan.nextLine();
 				}
 
-				host h = new host(n, s, r, d);
+				Host h = new Host(n, s, r, d);
 
 				hosts.add(h);
 			}
@@ -108,10 +108,10 @@ public class parser {
 
 	// Funcion para parsear el archivo status.dat en busca de todos los
 	// servicios
-	public static ArrayList<servicio> parseServicios() {
+	public static ArrayList<Servicio> parseServicios() {
 
 		String archivo = "/usr/local/nagios/var/status.dat";
-		ArrayList<servicio> serv = new ArrayList<servicio>();
+		ArrayList<Servicio> serv = new ArrayList<Servicio>();
 
 		Scanner scan = null;
 		try {
@@ -199,7 +199,7 @@ public class parser {
 					t = scan.nextLine();
 				}
 
-				servicio se = new servicio(n, h, s, r, d, i);
+				Servicio se = new Servicio(n, h, s, r, d, i);
 
 				serv.add(se);
 			}

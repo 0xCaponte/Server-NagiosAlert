@@ -14,7 +14,7 @@ import java.util.Comparator;
  *
  */
 
-public class host {
+public class Host {
 
 	private String nombre;
 	private int status;
@@ -22,7 +22,7 @@ public class host {
 	private String duracion;
 
 	// ------------------ Constructor ------------------
-	public host(String nombre, int status, String revision, String duracion) {
+	public Host(String nombre, int status, String revision, String duracion) {
 		super();
 		this.nombre = nombre;// Nombre del host
 		this.status = status; // Estado del host (0,1,2,3)
@@ -67,9 +67,9 @@ public class host {
 	// -------------------- Comparadores -----------------------------
 	
 	//Funcions Comparadora para ordenar hosts por nombre
-	public static Comparator<host> hostName = new Comparator<host>() {
+	public static Comparator<Host> hostName = new Comparator<Host>() {
 		@Override
-		public int compare(host s1, host s2) {
+		public int compare(Host s1, Host s2) {
 			String host1 = s1.getNombre().toUpperCase();
 			String host2 = s2.getNombre().toUpperCase();
 

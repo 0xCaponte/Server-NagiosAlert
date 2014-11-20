@@ -1,6 +1,10 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,10 +33,10 @@ public class Actualizar extends HttpServlet {
 	// asociados a el.
 	private class envio{
 		
-		host h;
-		ArrayList<servicio> s;
+		Host h;
+		ArrayList<Servicio> s;
 		
-		private envio(host h, ArrayList<servicio> s){
+		private envio(Host h, ArrayList<Servicio> s){
 			
 			this.h = h;
 			this.s = s;
@@ -59,28 +63,28 @@ public class Actualizar extends HttpServlet {
 		// ------------- FALTA AUTENTICAR LA PETICION ----------------------
 
 		// Obtenemos la lista de hosts y servicios
-		ArrayList<host> h = parser.parseHosts();
-		ArrayList<servicio> s = parser.parseServicios();
+		ArrayList<Host> h = Parser.parseHosts();
+		ArrayList<Servicio> s = Parser.parseServicios();
 		
 		
 //TEMPORAL -- SOLO PARA MANDAR MAS DE UN HOST!!!
-		host h1 = new host("Zeus", h.get(0).getStatus(), h.get(0).getRevision(), h.get(0).getDuracion());
+		Host h1 = new Host("Zeus", h.get(0).getStatus(), h.get(0).getRevision(), h.get(0).getDuracion());
 		h.add(h1);
 		
-		servicio s1 = new servicio("Prueba", "Zeus", s.get(0).getStatus(), s.get(0).getRevision(), s.get(0).getDuracion(), "Solo para ver");
+		Servicio s1 = new Servicio("Prueba", "Zeus", s.get(0).getStatus(), s.get(0).getRevision(), s.get(0).getDuracion(), "Solo para ver");
 		s.add(s1);
 //FIN TEMPORAL -------
 		
-		Collections.sort(h, host.hostName);
-		Collections.sort(s, servicio.servicioName);
+		Collections.sort(h, Host.hostName);
+		Collections.sort(s, Servicio.servicioName);
 	
 		// Creamos el hashmap
 		HashMap<String, envio> mapa = new HashMap<String, envio>();
 
-		for (host t1 : h) {
-			ArrayList<servicio> temporal = new ArrayList<servicio>();
+		for (Host t1 : h) {
+			ArrayList<Servicio> temporal = new ArrayList<Servicio>();
 
-			for (servicio t2 : s) {
+			for (Servicio t2 : s) {
 
 				if (t1.getNombre().equals(t2.getHost())) {
 					temporal.add(t2);
@@ -93,13 +97,66 @@ public class Actualizar extends HttpServlet {
 		}
 
 		String json = new Gson().toJson(mapa);
+
+		RSA rsa = new RSA();
+		AES aes = new AES();
 		
-		//Aqui lo ciframos
-		// json = LLaves.cifrar(k,json)
+		try {
+			KeyPair kp = rsa.generarLlaves_RSA();
+				
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		//Aqui lo mandamos
 		out.print(json);
-	
+		
+		//Iniciamos proceso de enveloping
+		
+		byte[] en_text = null;
+		byte[] en_key = null;
+		try {
+			
+			//1) ciframos el texto con AES (simetrico)
+			en_text = aes.cifrar_AES(json);
+			
+			//2) ciframos la lalve del AES (asimetrico)
+			en_key = rsa.cifrar_RSA(aes.getKey());
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		out.print("\n\n ---------------------- CIFRADO TEXTO CON AES -----------------");
+		out.print(new String(en_text));
+		out.print("\n\n ---------------------------- CIFRADO LLAVE CON RSA  -------------- \n ");
+		out.print(new String(en_key));
+		
+		String des_text = null;
+		String des_key = null;
+		
+		//1) desciframos la llave del AES con RSA  (asimetrico)
+		des_key = rsa.descifrar_RSA(en_key);
+		
+		//2) desciframos el texto con AES (simetrico)
+		try {
+			des_text = aes.descifrar_AES(en_text, des_key);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		out.print("\n\n ---------------------------- DESCIFRADO LLAVE CON RSA  -------------- \n ");
+		out.print(new String(des_key));
+		out.print("\n\n ---------------------- DESCIFRADO TEXTO CON AES -----------------");
+		out.print(new String(des_text));
+		
+		
+
+
+		
 	}
 
 	/**

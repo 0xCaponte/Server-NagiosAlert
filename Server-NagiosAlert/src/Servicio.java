@@ -15,7 +15,7 @@ import java.util.Comparator;
  * @author caponte
  *
  */
-public class servicio{
+public class Servicio{
 	
 	private String nombre; // Nombre del servicio
 	private String host; // Nombre del host al que pertenece
@@ -26,7 +26,7 @@ public class servicio{
 	
 
 //	---------------------   Constructor  ---------------------
-	public servicio(String nombre, String host, int status, String revision,
+	public Servicio(String nombre, String host, int status, String revision,
 			String duracion, String info) {
 		super();
 		this.nombre = nombre;
@@ -82,9 +82,9 @@ public class servicio{
 	// -------------------- Comparadores -----------------------------
 	
 	//Funcions Comparadora para ordenar servicios por nombre del servicio
-	public static Comparator<servicio> servicioName = new Comparator<servicio>() {
+	public static Comparator<Servicio> servicioName = new Comparator<Servicio>() {
 		@Override
-		public int compare(servicio s1, servicio s2) {
+		public int compare(Servicio s1, Servicio s2) {
 			String servicio1 = s1.getNombre().toUpperCase();
 			String servicio2 = s2.getNombre().toUpperCase();
 
@@ -94,9 +94,9 @@ public class servicio{
 	};
 	
 	//Funcions Comparadora para ordenar servicios por HOST al que pertenecen
-		public static Comparator<servicio> servicioHost= new Comparator<servicio>() {
+		public static Comparator<Servicio> servicioHost= new Comparator<Servicio>() {
 			@Override
-			public int compare(servicio s1, servicio s2) {
+			public int compare(Servicio s1, Servicio s2) {
 				String servicio1 = s1.getHost().toUpperCase();
 				String servicio2 = s2.getHost().toUpperCase();
 
