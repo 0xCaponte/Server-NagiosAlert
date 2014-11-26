@@ -19,19 +19,18 @@ import java.security.spec.RSAPublicKeySpec;
 
 import javax.crypto.Cipher;
 
-
-
 public class RSA {
 
 	String dir = System.getProperty("user.dir");
 	String archivo_privada = dir + "/private";
 	String archivo_publica = dir + "/publica";
-	
-	public RSA(){}
 
-	private void guardarLlave_RSA(String archivo, BigInteger mod, BigInteger exp)
+	public RSA() {
+	}
+
+	public void guardarLlave_RSA(String archivo, BigInteger mod, BigInteger exp)
 			throws IOException {
-		
+
 		FileOutputStream fos = null;
 		ObjectOutputStream oos = null;
 
@@ -99,19 +98,21 @@ public class RSA {
 			// Devolvemos las llaves preexistentes
 			PublicKey pub = leerPublica(archivo_publica);
 			PrivateKey priv = leerPrivada(archivo_privada);
-			
-			kp = new KeyPair(pub, priv);			
+
+			kp = new KeyPair(pub, priv);
 			return kp;
 		}
 
 	}
 
+	// Cifra con la llave privada
+
 	public byte[] cifrar_RSA(String data) throws IOException {
 
-		byte[] d = data.getBytes();
+		byte[] d = data.getBytes("UTF-8");
 		byte[] en = null;
 		try {
-			PublicKey p = leerPublica(archivo_publica);
+			PrivateKey p = leerPrivada(archivo_privada);
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, p);
 			en = cipher.doFinal(d);
@@ -122,12 +123,13 @@ public class RSA {
 		return en;
 	}
 
+	// Descifra con la llave publica
 	public String descifrar_RSA(byte[] data) throws IOException {
 
 		byte[] d = null;
 		String s = null;
 		try {
-			PrivateKey p = leerPrivada(archivo_privada);
+			PrivateKey p = leerPrivada(archivo_publica);
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.DECRYPT_MODE, p);
 			d = cipher.doFinal(data);
@@ -141,10 +143,42 @@ public class RSA {
 		return s;
 	}
 
+	public PublicKey leerPublica() throws IOException {
+		FileInputStream fis = null;
+		ObjectInputStream ois = null;
+
+		try {
+			fis = new FileInputStream(new File(archivo_publica));
+			ois = new ObjectInputStream(fis);
+
+			BigInteger modulo = (BigInteger) ois.readObject();
+			BigInteger exponente = (BigInteger) ois.readObject();
+
+			// Buscar Publica
+			RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(modulo,
+					exponente);
+			KeyFactory fact = KeyFactory.getInstance("RSA");
+			PublicKey p = fact.generatePublic(rsaPublicKeySpec);
+
+			return p;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ois != null) {
+				ois.close();
+				if (fis != null) {
+					fis.close();
+				}
+			}
+		}
+		return null;
+	}
+	
 	public PublicKey leerPublica(String archivo) throws IOException {
 		FileInputStream fis = null;
 		ObjectInputStream ois = null;
-		
+
 		try {
 			fis = new FileInputStream(new File(archivo));
 			ois = new ObjectInputStream(fis);
@@ -173,9 +207,8 @@ public class RSA {
 		return null;
 	}
 
-	public PrivateKey leerPrivada(String archivo)
-			throws IOException {
-		
+	public PrivateKey leerPrivada(String archivo) throws IOException {
+
 		FileInputStream fis = null;
 		ObjectInputStream ois = null;
 		try {
@@ -186,8 +219,8 @@ public class RSA {
 			BigInteger exponente = (BigInteger) ois.readObject();
 
 			// Buscar Llave Privada
-			RSAPrivateKeySpec rsaPrivateKeySpec = new RSAPrivateKeySpec(
-					modulo, exponente);
+			RSAPrivateKeySpec rsaPrivateKeySpec = new RSAPrivateKeySpec(modulo,
+					exponente);
 			KeyFactory fact = KeyFactory.getInstance("RSA");
 			PrivateKey p = fact.generatePrivate(rsaPrivateKeySpec);
 
@@ -206,4 +239,36 @@ public class RSA {
 		return null;
 	}
 	
+	public PrivateKey leerPrivada() throws IOException {
+
+		FileInputStream fis = null;
+		ObjectInputStream ois = null;
+		try {
+			fis = new FileInputStream(new File(archivo_privada));
+			ois = new ObjectInputStream(fis);
+
+			BigInteger modulo = (BigInteger) ois.readObject();
+			BigInteger exponente = (BigInteger) ois.readObject();
+
+			// Buscar Llave Privada
+			RSAPrivateKeySpec rsaPrivateKeySpec = new RSAPrivateKeySpec(modulo,
+					exponente);
+			KeyFactory fact = KeyFactory.getInstance("RSA");
+			PrivateKey p = fact.generatePrivate(rsaPrivateKeySpec);
+
+			return p;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ois != null) {
+				ois.close();
+				if (fis != null) {
+					fis.close();
+				}
+			}
+		}
+		return null;
+	}
+
 }

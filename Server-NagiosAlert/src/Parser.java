@@ -211,16 +211,4 @@ public class Parser {
 
 	}
 
-//	public static void main(String[] arg) {
-//
-//		ArrayList<servicio> s = parseServicios();
-//
-//		Collections.sort(s, servicio.servicioName);
-//		   for(servicio temp: s){
-//				System.out.println(temp.getNombre());
-//				System.out.println(temp.getHost());
-//				System.out.println("------------------");
-//		   }
-//		   
-//	}
 }
