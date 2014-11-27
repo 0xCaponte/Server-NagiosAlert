@@ -11,6 +11,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 
+import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.Result;
+import com.google.android.gcm.server.Sender;
+
 //Verifica si hay novedades en el estado de algun servicio.
 public class Novedades implements Runnable {
 
@@ -34,17 +38,15 @@ public class Novedades implements Runnable {
 		// Aqui se revisa periodicamente si ha habido campos ene l status o la
 		// cantidad de los host y servicios.
 		while (true) {
-			System.out.println("vuelta");
+			System.out.println("Revisando Cambios");
 
 			if (primera) {
-
-				System.out.println("primera");
+				
 				primera = false;
 				h1 = Parser.parseHosts();
 				s1 = Parser.parseServicios();
 
 			} else {
-				System.out.println("otras");
 
 				h2 = h1;
 				h1 = Parser.parseHosts();
@@ -62,12 +64,13 @@ public class Novedades implements Runnable {
 				c2 = cambiosServicios(s1, s2);
 
 				if (c1 || c2) {
-					notificar();
+					int i = 0;
+					//notificar();
 				}
 			}
 
 			try {
-				Thread.sleep(5000);// 20 seg
+				Thread.sleep(10000);// 20 seg
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -83,19 +86,20 @@ public class Novedades implements Runnable {
 		}
 	}
 
-	public void notificar() {
+	public void notificar() throws IOException {
 
-		// Sender sender = new Sender(apiKey);
-		// Message message = new Message.Builder().addData("message",
-		// "Novedades")
-		// .build();
-		//
-		// try {
-		// Result result = sender.send(message, registrationId, numOfRetries);
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		Sender sender = new Sender(apiKey);
+		Message message = new Message.Builder().addData("message", "Novedades")
+				.build();
+
+		registrationId = getClientId();
+
+		try {
+			Result result = sender.send(message, registrationId, numOfRetries);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private boolean cambiosServicios(ArrayList<Servicio> s1,
@@ -131,14 +135,9 @@ public class Novedades implements Runnable {
 			int st1 = t1.getStatus();
 			int st2 = t2.getStatus();
 
-			// if (t1.getDuracion() != t2.getDuracion()) {
-			//
-			//
-			// }
-
 			if (!n1.equals(n2)) {
 				System.out.println("Novedad en Nombre Servicio!!");
-				i = fecha + " -- Cambio en el nombre del Servicio. Antes= "
+				i = fecha + " -- Cambio en el host  "  + t1.getHost() + ", nombre del Servicio cambio. Antes= "
 						+ n1 + " || Ahora= " + n2 + "\n";
 
 				escribirLog(i);
@@ -146,7 +145,7 @@ public class Novedades implements Runnable {
 			} else if (st1 != st2) {
 				System.out.println("Novedad en Status Servicio!!");
 
-				i = fecha + " -- Cambio en el Status del Servico. Antes= "
+				i = fecha + " -- Cambio en el host "   + t1.getHost() + ", el Status del Servico " + n1 + " cambio. Antes= "
 						+ st1 + " || Ahora= " + st2 + "\n";
 				escribirLog(i);
 				return true;
@@ -184,7 +183,7 @@ public class Novedades implements Runnable {
 			int s1 = t1.getStatus();
 			int s2 = t2.getStatus();
 
-			if (n1.equals(n2)) {
+			if (!n1.equals(n2)) {
 				System.out.println("Novedad en Nombre Host!!");
 
 				i = fecha + " -- Cambio en el nombre del host. Antes= " + n1
@@ -193,10 +192,10 @@ public class Novedades implements Runnable {
 				escribirLog(i);
 
 				return true;
-			} else if (s1 == s2) {
+			} else if (s1 != s2) {
 				System.out.println("Novedad en Status Host!!");
 
-				i = fecha + " -- Cambio en el Status del host. Antes= " + s1
+				i = fecha + " -- Cambio en el Status del host " + n1 + " . Antes= " + s1
 						+ " || Ahora= " + s2 + "\n";
 
 				escribirLog(i);
@@ -208,11 +207,38 @@ public class Novedades implements Runnable {
 		return false;
 	}
 
+	protected String getClientId() throws IOException {
+
+		String id;
+
+		String home = System.getProperty("user.home");
+		String archivo = home + "/nagiosAlert/client_id";
+
+		// Cargamos el contenido actual
+		FileInputStream fis = new FileInputStream(archivo);
+
+		BufferedReader buffer = new BufferedReader(new InputStreamReader(fis));
+
+		StringBuilder sb = new StringBuilder();
+		String linea, info, new_info;
+		new_info = "";
+
+		while ((linea = buffer.readLine()) != null) {
+			sb.append(linea + "\n");
+		}
+
+		fis.close();
+
+		id = sb.toString();
+
+		return id;
+	}
+
 	protected boolean escribirLog(String i) {
 
 		// Preparamos el archivo de incidentes
 		String home = System.getProperty("user.home");
-		String archivo = home + "/log-NagiosAlert.txt";
+		String archivo = home + "/nagiosAlert/log-NagiosAlert.txt";
 		String data = "";
 
 		// Se lee todo el archivo, y se le anexa los nuevos incidente al inicio.
