@@ -147,7 +147,6 @@ public class Actualizar extends HttpServlet {
 			des_text = aes.descifrar_AES(en_text, des_key);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 
