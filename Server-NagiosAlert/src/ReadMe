@@ -71,10 +71,27 @@ INDICE |
 		-- NagiosAlert (Aplicación móvil): paquete que contiene todas las clases y librerías necesarias para la aplicación
 			para dispositivos con sistema operativo Android, en este paquete las carpetas y archivos mas resaltantes
 			son:
+			
+				*SplashScreen.java : clase que implementa la visualizacion de la pantalla principal del app.
+				
+				*MainActivity.java : clase que implementa el login en la aplicacion
+				
+				*GCM_Activity.java : clase que implementa los metodos necesarios para que funcione la comunicacion 
+				con el servidor  google,  lo anterior hace posible el envio de notificaciones al dispositivo movil
+				
+				*GCMBroadcastReceiver.java : 
+				
+				*GCMIntentService.java : servlet para el envio del estado actual del sistema al usuario.
+				
+				*RefreshActivity.java :  implementa el listado de host que envia el servidor (especificando cada atributo)
+				
+				*ServiceActivity.java : implementacion del listado de servicios de acuerdo al host, especificacion una serie de atributos
 
-
-
-
+				*servicio.java :  implementa la clase o tipo servicio
+				
+				*host.java : implementa la clase o tipo host
+				
+				*envio.java :implementa la clase o tipo envio
 
 		-- Server-NagiosAlert (Servidor): paquete que contiene todas las clases y librerías necesarias para el servidor de
 			NagiosAler, en este paquete las carpetas y archivos de mas importancia son:
